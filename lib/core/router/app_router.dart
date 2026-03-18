@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../presentation/auth/login_screen.dart';
+import '../../presentation/book/book_detail_screen.dart';
 import '../../presentation/auth/register_screen.dart';
 import '../../presentation/auth/reset_password_screen.dart';
 import '../../presentation/catalog/catalog_screen.dart';
@@ -73,6 +74,18 @@ GoRouter appRouter(Ref ref) {
         pageBuilder: (context, state) => sharedAxisTransitionPage(
           state: state,
           child: const ResetPasswordScreen(),
+        ),
+      ),
+
+      // Book detail (outside shell — full screen with back button)
+      GoRoute(
+        path: '/book/:bookId',
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => sharedAxisTransitionPage(
+          state: state,
+          child: BookDetailScreen(
+            bookId: state.pathParameters['bookId']!,
+          ),
         ),
       ),
 
