@@ -173,12 +173,18 @@ CREATE INDEX idx_user_shelves_user ON public.user_shelves(user_id);
 CREATE INDEX idx_user_highlights_user_book ON public.user_highlights(user_id, book_id);
 CREATE INDEX idx_subscriptions_user ON public.subscriptions(user_id);
 
+-- Immutable wrapper for array_to_string (needed for generated column)
+CREATE OR REPLACE FUNCTION immutable_array_to_string(arr TEXT[], sep TEXT)
+RETURNS TEXT AS $$
+  SELECT array_to_string(arr, sep);
+$$ LANGUAGE sql IMMUTABLE;
+
 -- Full-text search index with Russian dictionary
 ALTER TABLE public.books ADD COLUMN search_vector tsvector
   GENERATED ALWAYS AS (
     setweight(to_tsvector('russian', coalesce(title, '')), 'A') ||
     setweight(to_tsvector('russian', coalesce(author, '')), 'B') ||
-    setweight(to_tsvector('russian', coalesce(array_to_string(tags, ' '), '')), 'C')
+    setweight(to_tsvector('russian', coalesce(immutable_array_to_string(tags, ' '), '')), 'C')
   ) STORED;
 
 CREATE INDEX idx_books_search ON public.books USING gin(search_vector);
