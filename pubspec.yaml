@@ -1,0 +1,58 @@
+name: book_summary
+description: "Саммари нон-фикшн книг на русском языке"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.3.1
+  riverpod_annotation: ^4.0.2
+  go_router: ^17.1.0
+  supabase_flutter: ^2.12.0
+  hive_ce_flutter: ^2.3.4
+  hive_ce: ^2.19.3
+  google_fonts: ^8.0.2
+  shimmer: ^3.0.0
+  phosphor_flutter: ^2.1.0
+  shared_preferences: ^2.5.4
+  flutter_animate: ^4.5.2
+  uuid: ^4.5.3
+  intl: ^0.20.2
+  json_annotation: ^4.11.0
+  freezed_annotation: ^3.1.0
+  connectivity_plus: ^7.0.0
+  animations: ^2.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  riverpod_generator: ^4.0.3
+  build_runner: ^2.13.0
+  json_serializable: ^6.13.0
+  hive_ce_generator: ^1.11.0
+  freezed: ^3.2.5
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+
+  fonts:
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/PlayfairDisplay-SemiBold-subset.woff2
+          weight: 600
+        - asset: assets/fonts/PlayfairDisplay-Bold-subset.woff2
+          weight: 700
+    - family: SourceSans3
+      fonts:
+        - asset: assets/fonts/SourceSans3-Regular-subset.woff2
+          weight: 400
+        - asset: assets/fonts/SourceSans3-SemiBold-subset.woff2
+          weight: 600
