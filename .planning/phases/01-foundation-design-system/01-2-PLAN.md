@@ -286,6 +286,7 @@ CREATE TRIGGER on_auth_user_created
 - File contains `CREATE TABLE public.user_shelves`
 - File contains `CREATE TABLE public.user_highlights`
 - File contains `CREATE TABLE public.user_downloads`
+- File contains `CREATE TABLE public.user_ratings`
 - File contains `CREATE TABLE public.subscriptions`
 - File contains `CREATE TABLE public.payments`
 - File contains `CREATE TABLE public.collections`

@@ -19,6 +19,11 @@ files_modified:
   - lib/core/storage/hive_init.dart
   - lib/core/storage/hive_keys.dart
   - .env.example
+  - assets/fonts/PlayfairDisplay-SemiBold-subset.woff2
+  - assets/fonts/PlayfairDisplay-Bold-subset.woff2
+  - assets/fonts/SourceSans3-Regular-subset.woff2
+  - assets/fonts/SourceSans3-SemiBold-subset.woff2
+  - lib/core/theme/deferred_fonts.dart
 autonomous: true
 ---
 
@@ -486,6 +491,111 @@ class BookSummaryApp extends StatelessWidget {
 - lib/main.dart contains `ProviderScope(`
 - lib/main.dart contains `await initHive()`
 - lib/app.dart contains `class BookSummaryApp extends StatelessWidget`
+</acceptance_criteria>
+</task>
+
+<task id="6">
+<title>Subset fonts with pyftsubset and place in assets/fonts/</title>
+<read_first>
+- /root/my-app/.planning/phases/01-foundation-design-system/01-RESEARCH.md §2 (Font Subsetting Strategy)
+- /root/my-app/.planning/phases/01-foundation-design-system/01-RESEARCH.md §8 (Font Subsetting Workflow)
+</read_first>
+<action>
+Install fonttools and brotli if not present:
+```bash
+pip install fonttools brotli
+```
+
+Download the TTF source files for PlayfairDisplay (SemiBold, Bold) and SourceSans3 (Regular, SemiBold) from Google Fonts.
+
+Create the `assets/fonts/` directory if it does not exist.
+
+Run pyftsubset for each font file to produce Cyrillic + Latin subset .woff2 files:
+
+```bash
+pyftsubset PlayfairDisplay-SemiBold.ttf \
+  --unicodes="U+0000-00FF,U+0100-024F,U+0400-04FF,U+0500-052F,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F" \
+  --layout-features='*' \
+  --flavor=woff2 \
+  --output-file=assets/fonts/PlayfairDisplay-SemiBold-subset.woff2
+
+pyftsubset PlayfairDisplay-Bold.ttf \
+  --unicodes="U+0000-00FF,U+0100-024F,U+0400-04FF,U+0500-052F,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F" \
+  --layout-features='*' \
+  --flavor=woff2 \
+  --output-file=assets/fonts/PlayfairDisplay-Bold-subset.woff2
+
+pyftsubset SourceSans3-Regular.ttf \
+  --unicodes="U+0000-00FF,U+0100-024F,U+0400-04FF,U+0500-052F,U+2000-206F,U+20A0-20CF" \
+  --layout-features='*' \
+  --flavor=woff2 \
+  --output-file=assets/fonts/SourceSans3-Regular-subset.woff2
+
+pyftsubset SourceSans3-SemiBold.ttf \
+  --unicodes="U+0000-00FF,U+0100-024F,U+0400-04FF,U+0500-052F,U+2000-206F,U+20A0-20CF" \
+  --layout-features='*' \
+  --flavor=woff2 \
+  --output-file=assets/fonts/SourceSans3-SemiBold-subset.woff2
+```
+
+Update the `flutter.fonts` section in pubspec.yaml to reference the subset .woff2 files:
+```yaml
+fonts:
+  - family: PlayfairDisplay
+    fonts:
+      - asset: assets/fonts/PlayfairDisplay-SemiBold-subset.woff2
+        weight: 600
+      - asset: assets/fonts/PlayfairDisplay-Bold-subset.woff2
+        weight: 700
+  - family: SourceSans3
+    fonts:
+      - asset: assets/fonts/SourceSans3-Regular-subset.woff2
+        weight: 400
+      - asset: assets/fonts/SourceSans3-SemiBold-subset.woff2
+        weight: 600
+```
+</action>
+<acceptance_criteria>
+- assets/fonts/PlayfairDisplay-SemiBold-subset.woff2 file exists
+- assets/fonts/PlayfairDisplay-Bold-subset.woff2 file exists
+- assets/fonts/SourceSans3-Regular-subset.woff2 file exists
+- assets/fonts/SourceSans3-SemiBold-subset.woff2 file exists
+- pubspec.yaml contains `PlayfairDisplay-SemiBold-subset.woff2`
+- pubspec.yaml contains `PlayfairDisplay-Bold-subset.woff2`
+- pubspec.yaml contains `SourceSans3-Regular-subset.woff2`
+- pubspec.yaml contains `SourceSans3-SemiBold-subset.woff2`
+</acceptance_criteria>
+</task>
+
+<task id="7">
+<title>Create deferred font loading helper for reader fonts</title>
+<read_first>
+- /root/my-app/.planning/phases/01-foundation-design-system/01-RESEARCH.md §2 (Deferred Font Loading)
+- /root/my-app/.planning/phases/01-foundation-design-system/01-CONTEXT.md (Font Loading Strategy)
+</read_first>
+<action>
+Create `lib/core/theme/deferred_fonts.dart` with a `loadReaderFonts()` async function that loads Source Serif 4 and JetBrains Mono on demand using deferred import:
+
+```dart
+import 'package:google_fonts/google_fonts.dart' deferred as google_fonts_deferred;
+
+/// Loads reader-specific fonts (Source Serif 4, JetBrains Mono) on demand.
+/// Call this before navigating to the reader screen.
+/// Playfair Display and Source Sans 3 are bundled as assets and always available.
+Future<void> loadReaderFonts() async {
+  await google_fonts_deferred.loadLibrary();
+  // After loading, Source Serif 4 and JetBrains Mono are available
+  // via google_fonts_deferred.GoogleFonts.sourceSerif4() etc.
+}
+```
+
+This keeps the initial bundle small by deferring fonts only needed in the reader (Phase 4).
+</action>
+<acceptance_criteria>
+- lib/core/theme/deferred_fonts.dart file exists
+- File contains `loadReaderFonts()` function signature
+- File contains `deferred as google_fonts_deferred`
+- File contains `loadLibrary()`
 </acceptance_criteria>
 </task>
 

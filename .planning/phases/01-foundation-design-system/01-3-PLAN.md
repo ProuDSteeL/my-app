@@ -250,6 +250,7 @@ Both themes: NO elevation/shadow on any component. Warm Brutalism = borders and 
 - File contains `AppColors.backgroundDark` (scaffoldBackgroundColor for dark)
 - File contains `AppTypography.textTheme(Brightness.light)`
 - File contains `AppTypography.textTheme(Brightness.dark)`
+- File contains `BottomNavigationBarThemeData(` or `bottomNavigationBarTheme:`
 </acceptance_criteria>
 </task>
 
@@ -386,6 +387,7 @@ A card widget that displays a book cover, title, author, and read time. Specs:
 - File contains `maxLines: 2` (title)
 - File contains `TextOverflow.ellipsis`
 - File does NOT contain `elevation` or `BoxShadow`
+- File contains `Transform.translate(` OR `transform: Matrix4`
 </acceptance_criteria>
 </task>
 
