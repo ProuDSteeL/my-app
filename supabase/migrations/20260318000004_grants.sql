@@ -11,7 +11,7 @@ GRANT SELECT ON public.collection_books TO anon, authenticated;
 
 -- Authenticated-only read
 GRANT SELECT ON public.summaries TO authenticated;
-GRANT SELECT ON public.profiles TO authenticated;
+GRANT SELECT ON public.profiles TO anon, authenticated;
 GRANT UPDATE ON public.profiles TO authenticated;
 
 -- User-owned tables (full CRUD for authenticated)
